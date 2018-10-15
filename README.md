@@ -6,8 +6,11 @@ Touchscreen or tablet installed in a lobby or waiting room allows guest to self-
 ### About ###
 Josh North - josh.north@point808.com  
 Basic visitor sign-in/sign-out web application.  
-Hosted at https://git.point808.com and cloned to github.  If you have questions email me or use my server board at https://git.point808.com/Point808/LobbySIO, github issues are not enabled.  
+Hosted at https://git.point808.com and mirrored to github.
 GPLv3. Credit is appreciated.  
+
+### Support ###
+Email me or use the tools at https://git.point808.com/Point808/LobbySIO  
 
 ### Credits ###
 * Bootstrap - http://getbootstrap.com  
