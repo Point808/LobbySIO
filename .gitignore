@@ -1,0 +1,11 @@
+*~
+src/Config/Registry.php
+assets/logo-small.png
+assets/logo-text.png
+assets/Rules.pdf
+src/Language/en.lang.ini
+src/Language/fr.lang.ini
+src/Language/de.lang.ini
+src/Language/es.lang.ini
+.tmp/*
+!.tmp/index.php 
