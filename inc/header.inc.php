@@ -89,7 +89,7 @@
                         <?php endif; ?>
                         <?php if (isset($session_user)) { if ($session_user["0"]["users_usertype"] == "ADMIN"): ?>
                         <!-- ADDITIONAL MENU IF LOGGED IN AS ADMIN -->
-                        <li class="nav-item<?php if ($app_current_pagename==$transLang['USERS']): echo " active"; endif; ?>"><a class="nav-link" href="users.php"><i class="fas fa-users"></i> <?php echo $transLang['USERS']; ?></a></li>
+                        <li class="nav-item<?php if ($app_current_pagename==$transLang['ADMINISTRATION']): echo " active"; endif; ?>"><a class="nav-link" href="users.php"><i class="fas fa-users"></i> <?php echo $transLang['ADMINISTRATION']; ?></a></li>
                         <?php endif; }; ?>
                         <?php if ($session_status == false): ?>
                         <!-- MENU FOR ALL LOGGED OUT -->

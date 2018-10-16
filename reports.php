@@ -81,10 +81,10 @@
                     <div class="form-group row">
                         <div class='col-sm'>
                             <div class="input-group date" id="datetimepicker-1" data-target-input="#datetimepicker-1">
-                                <div class="input-group-prepend" data-target=".datetimepicker-1" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i>&nbsp <?php echo $transLang['START']; ?></div>
+                                <div class="input-group-prepend " data-target=".datetimepicker-1" data-toggle="datetimepicker">
+                                    <div class="input-group-text "><i class="fa fa-calendar"></i>&nbsp <?php echo $transLang['START']; ?></div>
                                 </div>
-                                <input value="<?php if (isset($_POST['starttime'])) { echo $_POST['starttime']; }; ?>" name="starttime" type="text" class="form-control datetimepicker-1" id="datetimepicker-1" data-target=".datetimepicker-1" autocomplete="new-password" required />
+                                <input value="<?php if (isset($_POST['starttime'])) { echo $_POST['starttime']; }; ?>" name="starttime" type="text" class="datetimepicker-input form-control datetimepicker-1" id="datetimepicker-1" data-target=".datetimepicker-1" autocomplete="new-password" required />
                             </div>
                         </div>
                         <div class='col-sm'>
@@ -92,7 +92,7 @@
                                 <div class="input-group-prepend" data-target=".datetimepicker-2" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i>&nbsp <?php echo $transLang['END']; ?></div>
                                 </div>
-                                <input value="<?php if (isset($_POST['endtime'])) { echo $_POST['endtime']; }; ?>" name="endtime" type="text" class="form-control datetimepicker-2" id="datetimepicker-2" data-target=".datetimepicker-2" autocomplete="new-password" required />
+                                <input value="<?php if (isset($_POST['endtime'])) { echo $_POST['endtime']; }; ?>" name="endtime" type="text" class="datetimepicker-input form-control datetimepicker-2" id="datetimepicker-2" data-target=".datetimepicker-2" autocomplete="new-password" required />
                             </div>
                         </div>
                         <script type="text/javascript">
