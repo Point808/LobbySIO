@@ -29,7 +29,7 @@ class StaticFunctions {
     public function getVersion ($app_disp_lang) {
         $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);
         $transLang =  $Translate->userLanguage();
-        echo $transLang['SOFTWARE_VERSION'] . ': lobbysio_v0.15-beta';
+        echo $transLang['SOFTWARE_VERSION'] . ': lobbysio_v0.16-beta';
     }
 
     public function getUTC () {

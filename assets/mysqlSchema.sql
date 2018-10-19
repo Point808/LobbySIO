@@ -22,103 +22,76 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `lsio_idtypes`
---
-
+DROP TABLE IF EXISTS `lsio_idtypes`;
 CREATE TABLE `lsio_idtypes` (
-  `id` tinyint(3) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
+  `id` int(10) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
   `name` char(8) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'LANG FILE CODE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `lsio_idtypes`
---
-
 INSERT INTO `lsio_idtypes` (`id`, `name`) VALUES
 (3, 'PASSPORT'),
 (2, 'STATEID'),
 (1, 'UNAVAIL');
-
 -- --------------------------------------------------------
-
---
--- Table structure for table `lsio_sites`
---
-
+DROP TABLE IF EXISTS `lsio_sites`;
 CREATE TABLE `lsio_sites` (
-  `id` tinyint(3) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
+  `id` int(10) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
   `name` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'LOCATION CODE',
-  `timezone` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'ISO TIMEZONE'
+  `timezone` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'ISO TIMEZONE',
+  `region` varchar(8) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'US, CAN, EMEA'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `lsio_sites`
---
-
-INSERT INTO `lsio_sites` (`id`, `name`, `timezone`) VALUES
-(1, 'NOSITE', 'UTC'),
-(2, 'Default', 'America/New_York');
+INSERT INTO `lsio_sites` (`id`, `name`, `timezone`, `region`) VALUES
+(1, 'NOSITE', 'UTC', 'NO'),
+(2, 'Default Site', 'America/New_York', 'US');
 -- --------------------------------------------------------
-
---
--- Table structure for table `lsio_users`
---
-
+DROP TABLE IF EXISTS `lsio_users`;
 CREATE TABLE `lsio_users` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `username` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password` varchar(60) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `created` datetime NOT NULL,
   `firstname` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `lastname` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usertype` int(11) UNSIGNED NOT NULL,
+  `usertype` int(10) UNSIGNED NOT NULL,
   `timezone` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `lsio_users`
---
-
 INSERT INTO `lsio_users` (`id`, `username`, `password`, `email`, `created`, `firstname`, `lastname`, `usertype`, `timezone`) VALUES
-(1, 'admin', '$2a$08$E5C4MP0JtsTmjIDm1aksgOHoascvOVNinOKKxAImrSnwL0zkd9FxO', 'a@b.c', '2015-02-18 19:50:31', 'System', 'Administrator', 1, '');
+(1, 'admin', '$2a$08$FW0JtSQUEBXxf9aNDioIqeH/FA.ydCPTkgKUZEEWPECQpxwlRxZA.', 'admin@domain.com', '2015-02-18 19:50:31', 'System', 'Administrator', 1, ''),
+(2, 'KIOSK', '', '', '2018-10-19 00:00:00', '', '', 3, ''),
+(3, 'Default User', '$2a$08$FW0JtSQUEBXxf9aNDioIqeH/FA.ydCPTkgKUZEEWPECQpxwlRxZA.', 'user1@domain.com', '2018-09-23 00:00:00', 'First', 'Last', 2, '');
 -- --------------------------------------------------------
-
---
--- Table structure for table `lsio_usertypes`
---
-
+DROP TABLE IF EXISTS `lsio_users_sites`;
+CREATE TABLE `lsio_users_sites` (
+  `sites_id` int(10) UNSIGNED NOT NULL COMMENT 'SITE ID',
+  `users_id` int(10) UNSIGNED NOT NULL COMMENT 'USER ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci COMMENT='PERMISSIONS LINK TABLE';
+INSERT INTO `lsio_users_sites` (`sites_id`, `users_id`) VALUES
+(1, 1),
+(2, 1),
+(1, 2),
+(2, 2),
+(1, 3),
+(2, 3);
+-- --------------------------------------------------------
+DROP TABLE IF EXISTS `lsio_usertypes`;
 CREATE TABLE `lsio_usertypes` (
-  `id` tinyint(3) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
+  `id` int(10) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
   `name` char(8) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'LANG FILE CODE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `lsio_usertypes`
---
-
 INSERT INTO `lsio_usertypes` (`id`, `name`) VALUES
 (1, 'ADMIN'),
 (3, 'KIOSK'),
+(4, 'SADMIN'),
 (2, 'USER');
-
 -- --------------------------------------------------------
-
---
--- Table structure for table `lsio_visits`
---
-
+DROP TABLE IF EXISTS `lsio_visits`;
 CREATE TABLE `lsio_visits` (
-  `id` int(15) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `firstname` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `lastname` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `company` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -128,30 +101,21 @@ CREATE TABLE `lsio_visits` (
   `signature` blob,
   `escort_signature` blob,
   `citizen` tinyint(3) UNSIGNED DEFAULT NULL,
-  `id_type` tinyint(3) UNSIGNED DEFAULT NULL,
+  `id_type` int(10) UNSIGNED DEFAULT NULL,
   `id_checked` tinyint(3) UNSIGNED DEFAULT NULL,
   `initials` varchar(5) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `badge` varchar(15) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `notes` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `site_id` tinyint(3) UNSIGNED DEFAULT NULL,
-  `reason` tinyint(3) UNSIGNED DEFAULT NULL,
+  `site_id` int(10) UNSIGNED DEFAULT NULL,
+  `reason` int(10) UNSIGNED DEFAULT NULL,
   `approved` tinyint(4) DEFAULT '1' COMMENT '0 void, 1 unapproved, 2 approved'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
-
---
--- Table structure for table `lsio_visittypes`
---
-
+-- --------------------------------------------------------
+DROP TABLE IF EXISTS `lsio_visittypes`;
 CREATE TABLE `lsio_visittypes` (
-  `id` tinyint(3) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
+  `id` int(10) UNSIGNED NOT NULL COMMENT 'UNIQUE ID',
   `name` char(8) COLLATE utf8mb4_unicode_520_ci NOT NULL COMMENT 'LANG FILE CODE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `lsio_visittypes`
---
-
 INSERT INTO `lsio_visittypes` (`id`, `name`) VALUES
 (2, 'ADDEQPT'),
 (7, 'INSTHARD'),
@@ -163,45 +127,25 @@ INSERT INTO `lsio_visittypes` (`id`, `name`) VALUES
 (3, 'REMEQPT'),
 (6, 'TESTING'),
 (5, 'TOUR');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `lsio_idtypes`
---
+-- --------------------------------------------------------
 ALTER TABLE `lsio_idtypes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
   ADD UNIQUE KEY `name` (`name`);
-
---
--- Indexes for table `lsio_sites`
---
 ALTER TABLE `lsio_sites`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
   ADD UNIQUE KEY `name` (`name`);
-
---
--- Indexes for table `lsio_users`
---
 ALTER TABLE `lsio_users`
   ADD PRIMARY KEY (`id`),
   ADD KEY `users_ibfk_1` (`usertype`);
-
---
--- Indexes for table `lsio_usertypes`
---
+ALTER TABLE `lsio_users_sites`
+  ADD UNIQUE KEY `user_site_perm` (`sites_id`,`users_id`) USING BTREE,
+  ADD KEY `users_id` (`users_id`);
 ALTER TABLE `lsio_usertypes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
   ADD UNIQUE KEY `name` (`name`);
-
---
--- Indexes for table `lsio_visits`
---
 ALTER TABLE `lsio_visits`
   ADD PRIMARY KEY (`id`),
   ADD KEY `site_id` (`site_id`),
@@ -209,49 +153,30 @@ ALTER TABLE `lsio_visits`
   ADD KEY `id_checked` (`id_checked`),
   ADD KEY `citizen` (`citizen`),
   ADD KEY `id_type` (`id_type`);
-
---
--- Indexes for table `lsio_visittypes`
---
 ALTER TABLE `lsio_visittypes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
   ADD UNIQUE KEY `name` (`name`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `lsio_idtypes`
---
+-- --------------------------------------------------------
 ALTER TABLE `lsio_idtypes`
-  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `lsio_sites`
---
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=100;
 ALTER TABLE `lsio_sites`
-  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=25;
---
--- AUTO_INCREMENT for table `lsio_users`
---
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=100;
 ALTER TABLE `lsio_users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
---
--- AUTO_INCREMENT for table `lsio_usertypes`
---
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 ALTER TABLE `lsio_usertypes`
-  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `lsio_visits`
---
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=100;
 ALTER TABLE `lsio_visits`
-  MODIFY `id` int(15) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
---
--- AUTO_INCREMENT for table `lsio_visittypes`
---
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 ALTER TABLE `lsio_visittypes`
-  MODIFY `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=11;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'UNIQUE ID', AUTO_INCREMENT=11;
+-- --------------------------------------------------------
+ALTER TABLE `lsio_users`
+  ADD CONSTRAINT `lsio_users_ibfk_1` FOREIGN KEY (`usertype`) REFERENCES `lsio_usertypes` (`id`);
+ALTER TABLE `lsio_users_sites`
+  ADD CONSTRAINT `lsio_users_sites_ibfk_3` FOREIGN KEY (`sites_id`) REFERENCES `lsio_sites` (`id`),
+  ADD CONSTRAINT `lsio_users_sites_ibfk_4` FOREIGN KEY (`users_id`) REFERENCES `lsio_users` (`id`);
+ALTER TABLE `lsio_visits`
+  ADD CONSTRAINT `lsio_visits_ibfk_1` FOREIGN KEY (`id_type`) REFERENCES `lsio_idtypes` (`id`),
+  ADD CONSTRAINT `lsio_visits_ibfk_2` FOREIGN KEY (`reason`) REFERENCES `lsio_visittypes` (`id`),
+  ADD CONSTRAINT `lsio_visits_ibfk_3` FOREIGN KEY (`site_id`) REFERENCES `lsio_sites` (`id`);
