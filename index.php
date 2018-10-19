@@ -17,26 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-    ini_set('session.gc_maxlifetime', 24*60*60);                 // MIN SESSION
-    ini_set('session.gc_probability', 1);                        // GC RATES
-    ini_set('session.gc_divisor', 100);                          // TIMES
-    session_save_path('.tmp');                                   // TEMP
-    session_start();                                             // START
-    require_once __DIR__ . '/autoload.php';                      // AUTOLOAD
-    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions(); // CLASSES
-    $Users = new \App\LobbySIO\Database\Users();
+    ini_set('session.gc_maxlifetime', 24*60*60);                                // MIN SESSION
+    ini_set('session.gc_probability', 1);                                       // GC RATES
+    ini_set('session.gc_divisor', 100);                                         // TIMES
+    session_save_path('.tmp');                                                  // TEMP
+    session_start();                                                            // START
+    require_once __DIR__ . '/autoload.php';                                     // AUTOLOAD
+    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions();                // DEFAULT CLASSES
     $SiteInfo = new \App\LobbySIO\Database\SiteInfo();
-    $VisitTypeInfo = new \App\LobbySIO\Database\VisitTypeInfo();
+    $Users = new \App\LobbySIO\Database\Users();
+    if (isset($_SESSION['user_id'])) {                                          // LOGGED IN? GET USER OBJECT
+        $session_user = $Users->getUserInfo($_SESSION['user_id'], "1", "0"); }
+    if (isset($session_user)) {                                                 // GET UID OR SET TO KIOSK
+        $uid = $session_user["0"]["users_id"];} else { $uid = "2"; }
+    $app_disp_lang = filter_input(INPUT_COOKIE, 'app_disp_lang');               // SETUP LANGUAGE
+    if(!isset($app_disp_lang)) {
+        $app_disp_lang=$StaticFunctions->getDefaultLanguage(); }
+    $siteidcookie = filter_input(INPUT_COOKIE, 'app_site');                     // SETUP SITE
+    foreach($SiteInfo->getSite("0", $uid, "0", "0") as $arr) {
+        $lookup_array[$arr['sites_id']]=1; }
+        if(isset($lookup_array[$siteidcookie])) {
+            $siteid = $siteidcookie; } else { $siteid = "1"; }
+        if(!isset($siteid)) { $siteid="1"; }
+    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);          // SETUP TRANSLATOR
+    $transLang =  $Translate->userLanguage();
+    $VisitTypeInfo = new \App\LobbySIO\Database\VisitTypeInfo();                // ADDITIONAL CLASSES
     $IDTypeInfo = new \App\LobbySIO\Database\IDTypeInfo();
     $VisitInfo = new \App\LobbySIO\Database\VisitInfo();
     $VisitActions = new \App\LobbySIO\Database\VisitActions();
-    if(!isset($_COOKIE['app_disp_lang'])) { $app_disp_lang = $StaticFunctions->getDefaultLanguage(); } else { $app_disp_lang = $_COOKIE['app_disp_lang']; };
-    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);
-    $transLang =  $Translate->userLanguage();                    // SETUP TRANSLATOR
-    $app_current_pagename = $transLang['HOME'];                  // PAGE FUNCTION
-    $app_current_pageicon = '<i class="fas fa-home"></i> ';      // PAGE ICON
-    require_once("inc/header.inc.php");                          // SHOW HEADER
-    if ($StaticFunctions->getSessionStatus() == false) {         // CHECK STATUS
+    $app_current_pagename = $transLang['HOME'];                                 // PAGE SETUP
+    $app_current_pageicon = '<i class="fas fa-home"></i> ';
+    require_once("inc/header.inc.php");
+    if ($StaticFunctions->getSessionStatus() == false) {                        // CHECK STATUS
     ?>
 <!-- GUEST CONTENT START -->
                     
@@ -129,7 +141,6 @@
     ?>
 
 
-
             <div class="container">
                 <div class="row">
                     <div class="col-sm">
@@ -171,12 +182,14 @@
                                     <input class="form-check-input" type="checkbox" value="1" id="id_checked" name="id_checked" disabled>
                                     <?php }; ?>
                                     <label class="form-check-label" for="id_checked"><?php echo $transLang['ID_CHECKED']; ?></label><br>
-                                    <?php if($row['visits_citizen']==1) { ?>
+                                    <?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "US") { if($row['visits_citizen']==1) { ?>
                                     <input class="form-check-input" type="checkbox" value="1" id="citizen" name="citizen" checked disabled>
                                     <?php } else { ?>
                                     <input class="form-check-input" type="checkbox" value="1" id="citizen" name="citizen" disabled>
                                     <?php }; ?>
-                                    <label class="form-check-label" for="citizen"><?php echo $transLang['CITIZEN']; ?></label></td>
+                                    <label class="form-check-label" for="citizen"><?php echo $transLang['CITIZEN']; ?></label>
+                                                                    <?php }; ?>
+</td>
                                 <td><input type="text" id="badge" name="badge" class="form-control" autofocus disabled value="<?php echo $row['visits_badge']; ?>"> <input type="text" id="initials" name="initials" class="form-control" autofocus disabled value="<?php echo $row['visits_initials']; ?>"></td>
                                 <td> </td>
                                 <td><button type="submit" name="endvisit" value="<?php echo $row['visits_id']; ?>" class="btn btn-warning btn-block"><i class="fas fa-sign-out-alt"></i>&nbsp<?php echo $transLang['SIGNOUT']; ?></button><br>
@@ -201,8 +214,10 @@
                                 <div class="invalid-feedback"><?php echo $transLang['REQUIRED']; ?></div>
                                 <input class="form-check-input" type="checkbox" value="1" id="id_checked" name="id_checked">
                                 <label class="form-check-label" for="id_checked"><?php echo $transLang['ID_CHECKED']; ?></label><br>
+<?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "US") { ?>
                                 <input class="form-check-input" type="checkbox" value="1" id="citizen" name="citizen">
                                 <label class="form-check-label" for="citizen"><?php echo $transLang['CITIZEN']; ?></label>
+<?php }; ?>
                                 <td>
                                     <input type="text" id="badge" name="badge" class="form-control<?php if( isset($badge_error) && $badge_error == "1" && $_POST['approvevisit'] == $visitid ) { echo " is-invalid"; } ?>" placeholder="<?php echo $transLang['BADGE']; ?>" autofocus maxlength="15">
                                         <div class="invalid-feedback"><?php echo $transLang['REQUIRED']; ?></div>

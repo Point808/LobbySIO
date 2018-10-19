@@ -17,25 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-    ini_set('session.gc_maxlifetime', 24*60*60);                 // MIN SESSION
-    ini_set('session.gc_probability', 1);                        // GC RATES
-    ini_set('session.gc_divisor', 100);                          // TIMES
-    session_save_path('.tmp');                                   // TEMP
-    session_start();                                             // START
-    require_once __DIR__ . '/autoload.php';                      // AUTOLOAD
-    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions(); // CLASSES
+    ini_set('session.gc_maxlifetime', 24*60*60);                                // MIN SESSION
+    ini_set('session.gc_probability', 1);                                       // GC RATES
+    ini_set('session.gc_divisor', 100);                                         // TIMES
+    session_save_path('.tmp');                                                  // TEMP
+    session_start();                                                            // START
+    require_once __DIR__ . '/autoload.php';                                     // AUTOLOAD
+    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions();                // DEFAULT CLASSES
     $SiteInfo = new \App\LobbySIO\Database\SiteInfo();
+    $Users = new \App\LobbySIO\Database\Users();
+    if (isset($_SESSION['user_id'])) {                                          // LOGGED IN? GET USER OBJECT
+        $session_user = $Users->getUserInfo($_SESSION['user_id'], "1", "0"); }
+    if (isset($session_user)) {                                                 // GET UID OR SET TO KIOSK
+        $uid = $session_user["0"]["users_id"];} else { $uid = "2"; }
+    $app_disp_lang = filter_input(INPUT_COOKIE, 'app_disp_lang');               // SETUP LANGUAGE
+    if(!isset($app_disp_lang)) {
+        $app_disp_lang=$StaticFunctions->getDefaultLanguage(); }
+    $siteidcookie = filter_input(INPUT_COOKIE, 'app_site');                     // SETUP SITE
+    foreach($SiteInfo->getSite("0", $uid, "0", "0") as $arr) {
+        $lookup_array[$arr['sites_id']]=1; }
+        if(isset($lookup_array[$siteidcookie])) {
+            $siteid = $siteidcookie; } else { $siteid = "1"; }
+        if(!isset($siteid)) { $siteid="1"; }
+    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);          // SETUP TRANSLATOR
+    $transLang =  $Translate->userLanguage();
     $VisitTypeInfo = new \App\LobbySIO\Database\VisitTypeInfo();
     $IDTypeInfo = new \App\LobbySIO\Database\IDTypeInfo();
     $VisitInfo = new \App\LobbySIO\Database\VisitInfo();
-    if(!isset($_COOKIE['app_disp_lang'])) { $app_disp_lang = $StaticFunctions->getDefaultLanguage(); } else { $app_disp_lang = $_COOKIE['app_disp_lang']; };
-    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);
-    $transLang =  $Translate->userLanguage();                    // SETUP TRANSLATOR
-    $app_current_pagename = $transLang['REPORTS'];               // PAGE FUNCTION
-    $app_current_pageicon = '<i class="fas fa-chart-pie"></i> '; // PAGE ICON
-    require_once("inc/header.inc.php");                          // SHOW HEADER
-    if ($StaticFunctions->getSessionStatus() == false) {         // CHECK STATUS
-        echo $StaticFunctions->killSession();                    // ELSE DIE
+    $app_current_pagename = $transLang['REPORTS'];                              // PAGE SETUP
+    $app_current_pageicon = '<i class="fas fa-chart-pie"></i> ';
+    require_once("inc/header.inc.php");
+    if ($StaticFunctions->getSessionStatus() == false) {                        // CHECK STATUS
+        echo $StaticFunctions->killSession();                                   // ELSE DIE
     } else { ?>
 <!-- CONTENT START -->
 
@@ -70,8 +83,10 @@
                                 </div>
                                 <?php if (isset($_POST['repsite'])) { $currentrepsite = $_POST['repsite']; } else { $currentrepsite = "0"; }; ?>
                                 <select name="repsite" class="form-control">
+<?php if($session_user["0"]["users_usertype"] == "ADMIN") { ?>
                                     <option value="all"<?php if ($currentrepsite == "all") {echo " selected";}; ?>><?php echo $transLang['ALL']; ?></option>
-                                    <?php foreach($SiteInfo->getSiteInfo("%") as $row): ?>
+<?php } ?>
+                                    <?php foreach($SiteInfo->getSite("0", $uid, "0", "0") as $row): ?>
                                     <option value="<?php echo $row['sites_id']; ?>"<?php if ($currentrepsite == $row['sites_id']) {echo " selected";}; ?>><?php echo $row['sites_name']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -118,7 +133,7 @@
         <?php if ($_POST['reporttype'] == "Default"): ?>
         <div class="container-fluid">
             <table id="report" class="table table-striped table-bordered">
-                <thead><tr><th><?php echo $transLang['IN']; ?></th><th><?php echo $transLang['OUT']; ?></th><th><?php echo $transLang['SITE']; ?></th><th><?php echo $transLang['COMPANY']; ?></th><th><?php echo $transLang['REASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['BADGE']; ?></th><th><?php echo $transLang['INITIALS']; ?></th><th><?php echo $transLang['CITIZEN']; ?></th><th><?php echo $transLang['ID_TYPE']; ?></th><th><?php echo $transLang['ID_CHECKED']; ?></th></tr></thead>
+                <thead><tr><th><?php echo $transLang['IN']; ?></th><th><?php echo $transLang['OUT']; ?></th><th><?php echo $transLang['SITE']; ?></th><th><?php echo $transLang['COMPANY']; ?></th><th><?php echo $transLang['REASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['BADGE']; ?></th><th><?php echo $transLang['INITIALS']; ?></th><?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?><th><?php echo $transLang['CITIZEN']; ?></th><?php }; ?><th><?php echo $transLang['ID_TYPE']; ?></th><th><?php echo $transLang['ID_CHECKED']; ?></th></tr></thead>
                 <tbody>
                     <?php
                         $approval = "2";
@@ -134,14 +149,14 @@
                     <tr>
                         <td><?php echo $timein_disp; ?></td>
                         <td><?php if (!empty($row['visits_outtime'])) {echo $timeout_disp; } else {echo $transLang['IN'];}; ?></td>
-                        <td><?php echo $SiteInfo->getSiteInfo($row['visits_site_id'])[0]["sites_name"]; ?></td>
+                        <td><?php echo $SiteInfo->getSite($row['visits_site_id'], $uid, "0", "0")[0]["sites_name"]; ?></td>
                         <td><?php echo $row['visits_company']; ?></td>
                         <td><?php echo $transLang[$VisitTypeInfo->getVisitTypeInfo($row['visits_reason'])[0]['visittypes_name']]; ?></td>
                         <td><?php echo $row['visits_lastname'] . ", " . $row['visits_firstname']; ?><br /><img src="<?php echo $row['visits_signature']; ?>" width="200" height="50" alt="Signature" /></td>
                         <td><?php if (!empty($row['visits_escort'])) {echo $row['visits_escort'] . '<br /><img src="' . $row['visits_escort_signature'] . '" width="200" height="50" alt="Escort Signature" />'; } ?></td>
                         <td><?php echo $row['visits_badge']; ?></td>
                         <td><?php echo $row['visits_initials']; ?></td>
-                        <td><?php if($row['visits_citizen']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>
+<?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?>                        <td><?php if($row['visits_citizen']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>  <?php }; ?>
                         <td><?php echo $transLang[$IDTypeInfo->getIDTypeInfo($row['visits_id_type'])[0]['idtypes_name']]; ?></td>
                         <td><?php if($row['visits_id_checked']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>
                     </tr>

@@ -27,29 +27,60 @@ use App\LobbySIO\Config\Registry;
  */
 
 class SiteInfo {
-    public function getSiteInfo ($siteid){
+
+// Return Site Information array.  0 eliminates argument
+    public function getSite ($sites_id, $users_id, $rowsperpage, $offset) {
+        if ($sites_id == "0") { $c_sites_id = NULL; }
+            else { $c_sites_id = Registry::DB_PRFX . "sites.id LIKE \"$sites_id\""; }
+        if ($users_id == "0") { $c_users_id = NULL; }
+            else { $c_users_id = Registry::DB_PRFX . "users_sites.users_id LIKE \"$users_id\""; }
+        
+        if ($c_sites_id === NULL AND $c_users_id === NULL) {
+            $c_where = NULL;
+        } elseif ($c_sites_id !== NULL AND $c_users_id !== NULL) {
+            $c_where = "WHERE " . $c_sites_id . " AND " . $c_users_id;
+        } elseif ($c_sites_id === NULL AND $c_users_id !== NULL) {
+            $c_where = "WHERE " . $c_users_id;
+        } elseif ($c_sites_id !== NULL AND $c_users_id === NULL) {
+            $c_where = "WHERE " . $c_sites_id;
+        }
+        
+        if ($rowsperpage == "0") { $c_rowsperpage = NULL; }
+            else { $c_rowsperpage = " LIMIT " . Registry::ROWSPERPAGE; }
+        if ($offset == "0") { $c_offset = NULL; }
+            else { $c_offset = " OFFSET " . $offset; }
         $query = "
-        SELECT
-        " . Registry::DB_PRFX . "sites.id as sites_id,
-        " . Registry::DB_PRFX . "sites.name as sites_name,
-        " . Registry::DB_PRFX . "sites.timezone as sites_timezone
-        FROM " . Registry::DB_PRFX . "sites
-        WHERE " . Registry::DB_PRFX . "sites.id LIKE \"$siteid\"";
+            SELECT
+            " . Registry::DB_PRFX . "sites.id as sites_id,
+            " . Registry::DB_PRFX . "sites.name as sites_name,
+            " . Registry::DB_PRFX . "sites.region as sites_region,
+            " . Registry::DB_PRFX . "sites.timezone as sites_timezone
+            FROM " . Registry::DB_PRFX . "sites
+            JOIN " . Registry::DB_PRFX . "users_sites ON " . Registry::DB_PRFX . "sites.id=" . Registry::DB_PRFX . "users_sites.sites_id
+            " . $c_where . "
+            ORDER BY " . Registry::DB_PRFX . "sites.name ASC" . $c_rowsperpage . $c_offset;
         $database = new \App\LobbySIO\Database\Connect();
         $rows = $database->getQuery($query);
         return $rows;
     }
-    
-    public function getSiteName ($siteid) {
+
+    public function deleteSite ($siteid) {
         $query = "
-            SELECT
-            " . Registry::DB_PRFX . "sites.id as sites_id,
-            " . Registry::DB_PRFX . "sites.name as sites_name
-            FROM " . Registry::DB_PRFX . "sites
-            WHERE " . Registry::DB_PRFX . "sites.id LIKE $siteid";
+            DELETE FROM " . Registry::DB_PRFX . "sites WHERE " . Registry::DB_PRFX . "sites.id=\"$siteid\"
+        ";
         $database = new \App\LobbySIO\Database\Connect();
-        $rows = $database->getQuery($query);
-        return $rows[0]["sites_name"];
+        $count = $database->runQuery($query);
+        return $count;
+    }
+
+    public function addSite ($sitename, $timezone, $region) {
+        $query = "
+            INSERT INTO " . Registry::DB_PRFX . "sites (" . Registry::DB_PRFX . "sites.name, " . Registry::DB_PRFX . "sites.timezone, " . Registry::DB_PRFX . "sites.region)
+            VALUES (\"$sitename\", \"$timezone\", \"$region\")
+        ";
+        $database = new \App\LobbySIO\Database\Connect();
+        $count = $database->runQuery($query);
+        return $count;
     }
 
 }

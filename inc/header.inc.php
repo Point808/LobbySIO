@@ -1,29 +1,53 @@
 <?php
-    require_once __DIR__ . '/../autoload.php';                   // AUTOLOAD
-    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions(); // CLASSES
+
+/*
+ * Copyright (C) 2018 josh.north
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+    //ini_set('session.gc_maxlifetime', 24*60*60);                              // MIN SESSION
+    //ini_set('session.gc_probability', 1);                                     // GC RATES
+    //ini_set('session.gc_divisor', 100);                                       // TIMES
+    //session_save_path('.tmp');                                                // TEMP
+    //session_start();                                                          // START
+    require_once __DIR__ . '/../autoload.php';                                  // AUTOLOAD
+    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions();                // DEFAULT CLASSES
     $SiteInfo = new \App\LobbySIO\Database\SiteInfo();
     $Users = new \App\LobbySIO\Database\Users();
-    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);
-    $transLang =  $Translate->userLanguage();                    // SETUP TRANSLATOR
-    ob_start();                                                  // OUTPUT BUFFER
-    if (isset($_SESSION['user_id'])): $session_user = $Users->getUserInfo($_SESSION['user_id'], "1", "0"); endif;  // SEE IF WE ARE LOGGED IN AND PULL NAME IF SO
-    $session_status = $StaticFunctions->getSessionStatus();      // SET A STATUS
+    if (isset($_SESSION['user_id'])) {                                          // LOGGED IN? GET USER OBJECT
+        $session_user = $Users->getUserInfo($_SESSION['user_id'], "1", "0"); }
+    if (isset($session_user)) {                                                 // GET UID OR SET TO KIOSK
+        $uid = $session_user["0"]["users_id"];} else { $uid = "2"; }
+    $app_disp_lang = filter_input(INPUT_COOKIE, 'app_disp_lang');               // SETUP LANGUAGE
+    if(!isset($app_disp_lang)) {
+        $app_disp_lang=$StaticFunctions->getDefaultLanguage(); }
+    $siteidcookie = filter_input(INPUT_COOKIE, 'app_site');                     // SETUP SITE
+    foreach($SiteInfo->getSite("0", $uid, "0", "0") as $arr) {
+        $lookup_array[$arr['sites_id']]=1; }
+        if(isset($lookup_array[$siteidcookie])) {
+            $siteid = $siteidcookie; } else { $siteid = "1"; }
+        if(!isset($siteid)) { $siteid="1"; }
+    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);          // SETUP TRANSLATOR
+    $transLang =  $Translate->userLanguage();
+    ob_start();                                                                 // OUTPUT BUFFER
+    $session_status = $StaticFunctions->getSessionStatus();                     // SET A STATUS
     $defaulttimezone = $StaticFunctions->getDefaultTZ();
-    date_default_timezone_set('UTC');                            // DEFAULT TO UTC
-    date_default_timezone_set($defaulttimezone); // UPDATE TO DEFAULT APP SETTING
-    if(!isset($_COOKIE['app_disp_lang'])) {                      // IF NO LANGUAGE COOKIE, SET LANG TO APP DEFAULT, OTHERWISE USE COOKIE LANGUAGE
-        $app_disp_lang=$StaticFunctions->getDefaultLanguage();
-    } else {
-        $app_disp_lang=$_COOKIE['app_disp_lang'];
-    };
-    if(!isset($_COOKIE['app_site'])) {                                  // LIKE LANGUAGE, DEFAULT IF NO COOKIE
-        $siteid="NOT SET";                                              // AND TIMEZONE AGAIN
-        $timezone = "UTC";                                              // BUT THE MODAL SHOULD POP AND BLOCK ANYWAY
-    } else {
-        $siteid=$_COOKIE['app_site'];
-        $timezone = $SiteInfo->getSiteInfo($siteid)[0]["sites_timezone"];
-    };
-    $timeplus = new DateTime($StaticFunctions->getUTC(), new DateTimeZone('UTC'));        // DUMB WAY TO CALCULATE SOME TIMES
+    date_default_timezone_set('UTC');                                           // DEFAULT TO UTC
+    date_default_timezone_set($defaulttimezone);                                // UPDATE TO DEFAULT APP SETTING
+    $timezone = $SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_timezone"]; // GET TIMEZONE FROM SITE ID
+    $timeplus = new DateTime($StaticFunctions->getUTC(), new DateTimeZone('UTC')); // DUMB WAY TO CALCULATE SOME TIMES
     $timeplus->setTimezone(new DateTimeZone("$timezone"));
     $timenow = $timeplus->format('Y-m-d H:i:s');
 ?>
@@ -97,19 +121,18 @@
                         <li class="nav-item<?php if ($app_current_pagename==$transLang['SIGNOUT']): echo " active"; endif; ?>"><a class="nav-link" href="signout.php"><i class="fas fa-sign-out-alt"></i> <?php echo $transLang['SIGNOUT']; ?></a></li>
                     </ul>
                     <ul class="navbar-nav mr-sm-2">
-                        <li class="nav-item<?php if ($app_current_pagename==$transLang['LOGIN']): echo " active"; endif; ?>"><a class="nav-link" href="login.php"><i class="fas fa-cogs"></i> <?php echo $transLang['LOGIN']; ?></a></li>
+                        <li class="nav-item<?php if ($app_current_pagename==$transLang['LOGIN']): echo " active"; endif; ?>"><a class="nav-link btn btn-sm btn-outline-success" href="login.php"><i class="fas fa-cogs"></i> </a></li>
                         <?php endif; ?>
                         <?php if ($session_status == true): ?>
                             <!-- MENU FOR ALL LOGGED IN - BOTTOM END -->
                     </ul>
                     <ul class="navbar-nav mr-sm-2">
-                        <li class="nav-item<?php if ($app_current_pagename==$transLang['LOGOUT']): echo " active"; endif; ?>"><a class="nav-link" href="logout.php"><i class="fas fa-ban"></i> <?php echo $transLang['LOGOUT']; ?></a></li>
+                        <li class="nav-item"><a class="nav-link<?php $sname=$SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]; if($sname=="NOSITE") { echo " btn btn-sm btn-outline-warning"; } else { echo " btn btn-sm btn-outline-secondary"; }; ?>" href="#" data-toggle="modal" data-target="#sitetimeModal"><i class="fas fa-map-marker-alt"></i> <?php if ($sname=="NOSITE") {echo $transLang['NOSITE'];} else { echo $sname; } ?></a></li>
+                        <li class="nav-item<?php if ($app_current_pagename==$transLang['LOGOUT']): echo " active"; endif; ?>"><a class="nav-link btn btn-sm btn-outline-danger" href="logout.php"><i class="fas fa-ban"></i> <?php echo $transLang['LOGOUT']; ?></a></li>
                         <?php endif; ?>
-                    </ul>
-                    <ul class="form-control-sm">
                         <form action="changelang.php" method="post" name="changelang" class="changelang">
                             <div class="input-group mb-3">
-                                <select class="custom-select" id="app_disp_lang" aria-label="Language" name="app_disp_lang">
+                                <select class="form-control custom-select btn btn-outline-secondary" id="app_disp_lang" aria-label="Language" name="app_disp_lang">
                                     <?php foreach(glob('src/Language/*.ini') as $file){
                                         if(!is_dir($file)) { $filename=basename(preg_replace('/\.[^.]+$/','',preg_replace('/\.[^.]+$/','',$file))); }; ?>
                                     <option value="<?php echo $filename; ?>"<?php if ($filename==$app_disp_lang) { echo " selected"; }; ?>><?php echo strtoupper($filename); ?></option>
@@ -127,7 +150,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="Site"><?php echo $transLang['CHOOSE']; ?> <?php echo $transLang['SITE']; ?></h5>
+                        <h5 class="modal-title" id="Site"><i class="fas fa-map-marker-alt"></i> <?php echo $transLang['SITE']; ?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -136,12 +159,12 @@
                         <form class="form-inline my-2 my-lg-0" action="changesite.php" method="post">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button"><?php echo $transLang['SITE']; ?></button>
+                                    <button class="btn btn-outline-secondary" type="button"><?php echo $transLang['CHOOSE']; ?></button>
                                 </div>
-                                <select class="custom-select" id="site" aria-label="Site" name="site">
-                                    <option selected><?php echo $transLang['CHOOSE']; ?></option>
-                                   <?php foreach($SiteInfo->getSiteInfo("%") as $row): ?>
-                                   <option value="<?php echo $row['sites_id']; ?>"><?php echo $row['sites_name']; ?></option>
+                                <select class="custom-select" id="site" aria-label="Site" name="site" required>
+                                    <option value="<?php if (isset($siteid)) { echo $SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]; } else { echo ""; } ?>" selected><?php if (isset($siteid)) { if ($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]=="NOSITE") {echo $transLang['NOSITE'];} else { echo $SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]; } } else { echo "- - -"; } ?></option>
+                                   <?php foreach($SiteInfo->getSite("0", $uid, "0", "0") as $row): ?>
+                                   <option value="<?php echo $row['sites_id']; ?>"><?php if ($row['sites_name']=="NOSITE") {echo $transLang['NOSITE'];} else { echo $row['sites_name']; } ?></option>
                                    <?php endforeach; ?>
                                 </select>
                                 <input class="btn" type="submit" value="<?php echo $transLang['SAVE']; ?>" />

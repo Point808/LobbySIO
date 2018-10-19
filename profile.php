@@ -17,22 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-    ini_set('session.gc_maxlifetime', 24*60*60);                 // MIN SESSION
-    ini_set('session.gc_probability', 1);                        // GC RATES
-    ini_set('session.gc_divisor', 100);                          // TIMES
-    session_save_path('.tmp');                                   // TEMP
-    session_start();                                             // START
-    require_once __DIR__ . '/autoload.php';                      // AUTOLOAD
-    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions(); // CLASSES
+    ini_set('session.gc_maxlifetime', 24*60*60);                                // MIN SESSION
+    ini_set('session.gc_probability', 1);                                       // GC RATES
+    ini_set('session.gc_divisor', 100);                                         // TIMES
+    session_save_path('.tmp');                                                  // TEMP
+    session_start();                                                            // START
+    require_once __DIR__ . '/autoload.php';                                     // AUTOLOAD
+    $StaticFunctions = new \App\LobbySIO\Misc\StaticFunctions();                // DEFAULT CLASSES
+    $SiteInfo = new \App\LobbySIO\Database\SiteInfo();
     $Users = new \App\LobbySIO\Database\Users();
-    if(!isset($_COOKIE['app_disp_lang'])) { $app_disp_lang = $StaticFunctions->getDefaultLanguage(); } else { $app_disp_lang = $_COOKIE['app_disp_lang']; };
-    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);
-    $transLang =  $Translate->userLanguage();                    // SETUP TRANSLATOR
-    $app_current_pagename = $transLang['ACCOUNT'];               // PAGE FUNCTION
-    $app_current_pageicon = '<i class="fas fa-user-circle"></i> ';// PAGE ICON
-    require_once("inc/header.inc.php");                          // SHOW HEADER
-    if ($StaticFunctions->getSessionStatus() == false) {         // CHECK STATUS
-        echo $StaticFunctions->killSession();                    // ELSE DIE
+    if (isset($_SESSION['user_id'])) {                                          // LOGGED IN? GET USER OBJECT
+        $session_user = $Users->getUserInfo($_SESSION['user_id'], "1", "0"); }
+    if (isset($session_user)) {                                                 // GET UID OR SET TO KIOSK
+        $uid = $session_user["0"]["users_id"];} else { $uid = "2"; }
+    $app_disp_lang = filter_input(INPUT_COOKIE, 'app_disp_lang');               // SETUP LANGUAGE
+    if(!isset($app_disp_lang)) {
+        $app_disp_lang=$StaticFunctions->getDefaultLanguage(); }
+    $siteidcookie = filter_input(INPUT_COOKIE, 'app_site');                     // SETUP SITE
+    foreach($SiteInfo->getSite("0", $uid, "0", "0") as $arr) {
+        $lookup_array[$arr['sites_id']]=1; }
+        if(isset($lookup_array[$siteidcookie])) {
+            $siteid = $siteidcookie; } else { $siteid = "1"; }
+        if(!isset($siteid)) { $siteid="1"; }
+    $Translate = new \App\LobbySIO\Language\Translate($app_disp_lang);          // SETUP TRANSLATOR
+    $transLang =  $Translate->userLanguage();
+    $app_current_pagename = $transLang['ACCOUNT'];                              // PAGE SETUP
+    $app_current_pageicon = '<i class="fas fa-user-circle"></i> ';
+    require_once("inc/header.inc.php");
+    if ($StaticFunctions->getSessionStatus() == false) {                        // CHECK STATUS
+        echo $StaticFunctions->killSession();                                   // ELSE DIE
     } else { ?>
 <!-- CONTENT START -->
 

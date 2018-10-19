@@ -37,7 +37,7 @@ class Registry { const
     DB_PRFX             = 'lsio_',                                              // DB table prefix
     ORGANIZATION        = 'Widgets, Inc',                                       // Organization name
     DEFAULTLANGUAGE     = 'en',                                                 // Default language - make sure a translation file exists
-    ROWSPERPAGE         = '5',                                                  // Rows per page on tables (does not include reports)
+    ROWSPERPAGE         = '10',                                                 // Rows per page on tables (does not include reports)
     MINPASS             = '8',                                                  // Minimum password length
     DEFAULTTZ           = 'America/New_York'                                    // DEFAULT TIME ZONE
 ;}

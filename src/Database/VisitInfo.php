@@ -41,7 +41,7 @@ class VisitInfo {
         if ($rowsperpage == "%") { $cond_rowsperpage = NULL; } else { $cond_rowsperpage = " LIMIT " . Registry::ROWSPERPAGE; };
         if ($offset == "%") { $cond_offset = NULL; } else { $cond_offset = " OFFSET " . $offset; };
         if ($intime == "%") { $cond_intime = NULL; } else { $cond_intime = Registry::DB_PRFX . "visits.intime=\"$intime\" AND "; };
-        if ($siteid == "%") { $cond_siteid = NULL; } else { $cond_siteid = Registry::DB_PRFX . "visits.site_id=\"$siteid\" AND "; };
+        if ($siteid == "%") { $cond_siteid = NULL; } else { $cond_siteid = Registry::DB_PRFX . "visits.site_id IN (\"$siteid\") AND "; };
         if ($visitid == "%") { $cond_visitid = NULL; } else { $cond_visitid = Registry::DB_PRFX . "visits.id LIKE \"$visitid\" AND "; };
         if ($starttime == "%") { $cond_intime = NULL; } else { $cond_intime = Registry::DB_PRFX . "visits.intime BETWEEN \"$starttime\" and \"$endtime\" AND "; };
         $query = "

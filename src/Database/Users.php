@@ -26,7 +26,7 @@ use App\LobbySIO\Config\Registry;
  * @author josh.north
  */
 class Users {
-    // Get site info as array by site id.  Pass % for all.
+    // Get user info as array by user id.  Pass % for all.
     public function getUserInfo($userid, $rowsperpage, $offset) {
         if ($rowsperpage == "%") { $cond_rowsperpage = NULL; } else { $cond_rowsperpage = " LIMIT " . Registry::ROWSPERPAGE; };
         if ($offset == "%") { $cond_offset = NULL; } else { $cond_offset = " OFFSET " . $offset; };
@@ -86,6 +86,7 @@ class Users {
         ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
 
     public function setUserInfo($uid, $firstname, $lastname, $email, $usertypeid, $password) {
@@ -102,6 +103,7 @@ class Users {
             ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
 
     public function getUserType ($usertypeid){
@@ -122,6 +124,7 @@ class Users {
         ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
 
     public function getUserTypeInfo ($usertypeid) {
