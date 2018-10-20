@@ -127,7 +127,7 @@
                             <!-- MENU FOR ALL LOGGED IN - BOTTOM END -->
                     </ul>
                     <ul class="navbar-nav mr-sm-2">
-                        <li class="nav-item"><a class="nav-link<?php $sname=$SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]; if($sname=="NOSITE") { echo " btn btn-sm btn-outline-warning"; } else { echo " btn btn-sm btn-outline-secondary"; }; ?>" href="#" data-toggle="modal" data-target="#sitetimeModal"><i class="fas fa-map-marker-alt"></i> <?php if ($sname=="NOSITE") {echo $transLang['NOSITE'];} else { echo $sname; } ?></a></li>
+                        <li class="nav-item"><a class="nav-link<?php $sname=$SiteInfo->getSite($siteid, "0", "0", "0")[0]["sites_name"]; if($sname=="NOSITE") { echo " btn btn-sm btn-outline-warning"; } else { echo " btn btn-sm btn-outline-secondary"; }; ?>" href="#" data-toggle="modal" data-target="#sitetimeModal"><i class="fas fa-map-marker-alt"></i> <?php if ($sname=="NOSITE") {echo $transLang['NOSITE'];} else { echo $sname; } ?></a></li>
                         <li class="nav-item<?php if ($app_current_pagename==$transLang['LOGOUT']): echo " active"; endif; ?>"><a class="nav-link btn btn-sm btn-outline-danger" href="logout.php"><i class="fas fa-ban"></i> <?php echo $transLang['LOGOUT']; ?></a></li>
                         <?php endif; ?>
                         <form action="changelang.php" method="post" name="changelang" class="changelang">
@@ -162,9 +162,8 @@
                                     <button class="btn btn-outline-secondary" type="button"><?php echo $transLang['CHOOSE']; ?></button>
                                 </div>
                                 <select class="custom-select" id="site" aria-label="Site" name="site" required>
-                                    <option value="<?php if (isset($siteid)) { echo $SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]; } else { echo ""; } ?>" selected><?php if (isset($siteid)) { if ($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]=="NOSITE") {echo $transLang['NOSITE'];} else { echo $SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_name"]; } } else { echo "- - -"; } ?></option>
                                    <?php foreach($SiteInfo->getSite("0", $uid, "0", "0") as $row): ?>
-                                   <option value="<?php echo $row['sites_id']; ?>"><?php if ($row['sites_name']=="NOSITE") {echo $transLang['NOSITE'];} else { echo $row['sites_name']; } ?></option>
+                                   <option value="<?php echo $row['sites_id']; ?>"<?php if ($row['sites_id']==$siteid) { echo " selected"; } ?>><?php if ($row['sites_name']=="NOSITE") {echo $transLang['NOSITE'];} else { echo $row['sites_name']; } ?></option>
                                    <?php endforeach; ?>
                                 </select>
                                 <input class="btn" type="submit" value="<?php echo $transLang['SAVE']; ?>" />
