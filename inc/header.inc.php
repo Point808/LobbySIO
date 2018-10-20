@@ -46,7 +46,7 @@
     $defaulttimezone = $StaticFunctions->getDefaultTZ();
     date_default_timezone_set('UTC');                                           // DEFAULT TO UTC
     date_default_timezone_set($defaulttimezone);                                // UPDATE TO DEFAULT APP SETTING
-    $timezone = $SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_timezone"]; // GET TIMEZONE FROM SITE ID
+    $timezone = $SiteInfo->getSite($siteid, "0", "0", "0")[0]["sites_timezone"]; // GET TIMEZONE FROM SITE ID
     $timeplus = new DateTime($StaticFunctions->getUTC(), new DateTimeZone('UTC')); // DUMB WAY TO CALCULATE SOME TIMES
     $timeplus->setTimezone(new DateTimeZone("$timezone"));
     $timenow = $timeplus->format('Y-m-d H:i:s');
