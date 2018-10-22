@@ -43,7 +43,7 @@ class VisitInfo {
         if ($intime == "%") { $cond_intime = NULL; } else { $cond_intime = Registry::DB_PRFX . "visits.intime=\"$intime\" AND "; };
         if ($siteid == "%") { $cond_siteid = NULL; } else { $cond_siteid = Registry::DB_PRFX . "visits.site_id IN (\"$siteid\") AND "; };
         if ($visitid == "%") { $cond_visitid = NULL; } else { $cond_visitid = Registry::DB_PRFX . "visits.id LIKE \"$visitid\" AND "; };
-        if ($starttime == "%") { $cond_intime = NULL; } else { $cond_intime = Registry::DB_PRFX . "(visits.intime BETWEEN \"$starttime\" and \"$endtime\" OR visits.outtime BETWEEN \"$starttime\" and \"$endtime\") AND "; };
+        if ($starttime == "%") { $cond_intime = NULL; } else { $cond_intime = Registry::DB_PRFX . "visits.intime BETWEEN \"$starttime\" and \"$endtime\" AND "; };
         $query = "
         SELECT
         " . Registry::DB_PRFX . "visits.id as visits_id,
