@@ -133,7 +133,7 @@
         <?php if ($_POST['reporttype'] == "Default"): ?>
         <div class="container-fluid">
             <table id="report" class="table table-striped table-bordered">
-                <thead><tr><th><?php echo $transLang['IN']; ?></th><th><?php echo $transLang['OUT']; ?></th><th><?php echo $transLang['SITE']; ?></th><th><?php echo $transLang['COMPANY']; ?></th><th><?php echo $transLang['REASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['BADGE']; ?></th><th><?php echo $transLang['INITIALS']; ?></th><?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?><th><?php echo $transLang['CITIZEN']; ?></th><?php }; ?><th><?php echo $transLang['ID_TYPE']; ?></th><th><?php echo $transLang['ID_CHECKED']; ?></th></tr></thead>
+                <thead><tr><th><?php echo $transLang['IN']; ?></th><th><?php echo $transLang['OUT']; ?></th><th><?php echo $transLang['SITE']; ?></th><th><?php echo $transLang['COMPANY']; ?></th><th><?php echo $transLang['REASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['BADGE']; ?></th><th><?php echo $transLang['INITIALS']; ?></th><?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?><th><?php echo $transLang['CARNUM']; ?></th><th><?php echo $transLang['SSANUM']; ?></th><?php }; ?><?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?><th><?php echo $transLang['CITIZEN']; ?></th><?php }; ?><th><?php echo $transLang['ID_TYPE']; ?></th><th><?php echo $transLang['ID_CHECKED']; ?></th></tr></thead>
                 <tbody>
                     <?php
                         $approval = "2";
@@ -156,6 +156,10 @@
                         <td><?php if (!empty($row['visits_escort'])) {echo $row['visits_escort'] . '<br /><img src="' . $row['visits_escort_signature'] . '" width="200" height="50" alt="Escort Signature" />'; } ?></td>
                         <td><?php echo $row['visits_badge']; ?></td>
                         <td><?php echo $row['visits_initials']; ?></td>
+<?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
+                                <td><?php echo $carnum; ?></td>
+                                <td><?php echo $ssanum; ?></td>
+<?php }; ?>
 <?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?>                        <td><?php if($row['visits_citizen']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>  <?php }; ?>
                         <td><?php echo $transLang[$IDTypeInfo->getIDTypeInfo($row['visits_id_type'])[0]['idtypes_name']]; ?></td>
                         <td><?php if($row['visits_id_checked']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>
