@@ -192,7 +192,8 @@
 </td>
                                 <td><input type="text" id="badge" name="badge" class="form-control" autofocus disabled value="<?php echo $row['visits_badge']; ?>"> <input type="text" id="initials" name="initials" class="form-control" autofocus disabled value="<?php echo $row['visits_initials']; ?>"></td>
 <?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
-                                <td><?php echo $row['visits_carnum']; ?> / <?php echo $row['visits_ssanum']; ?></td>
+<?php if(!empty($row['visits_carnum'])) { $carnum=$row['visits_carnum']; } else { $carnum="";}; ?>
+                                <td><?php echo $carnum; ?> / <?php echo $row['visits_ssanum']; ?></td>
 <?php }; ?>
                                 <td> </td>
                                 <td><button type="submit" name="endvisit" value="<?php echo $row['visits_id']; ?>" class="btn btn-warning btn-block"><i class="fas fa-sign-out-alt"></i>&nbsp<?php echo $transLang['SIGNOUT']; ?></button><br>
