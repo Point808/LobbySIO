@@ -154,7 +154,7 @@
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th><?php echo $transLang['TIMEREASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['VALIDATIONS']; ?></th><th><?php echo $transLang['BADGEINITIALS']; ?></th><?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?><th><?php echo $transLang['CARNUM'] . "/" . $transLang['SSANUM']; ?></th><?php }; ?><th><?php echo $transLang['ACTIONS']; ?></th><th>&nbsp</th>
+                            <th><?php echo $transLang['TIMEREASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['VALIDATIONS']; ?></th><th><?php echo $transLang['BADGEINITIALS']; ?></th><?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?><th><?php echo $transLang['CARNUM'] . " / " . $transLang['SSANUM']; ?></th><?php }; ?><th><?php echo $transLang['ACTIONS']; ?></th><th>&nbsp</th>
                         </tr>
                     </thead>
                     <tbody>

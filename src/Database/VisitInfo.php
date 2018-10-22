@@ -63,8 +63,8 @@ class VisitInfo {
         " . Registry::DB_PRFX . "visits.site_id as visits_site_id,
         " . Registry::DB_PRFX . "visits.company as visits_company,
         " . Registry::DB_PRFX . "visits.approved as visits_approved,
-        " . Registry::DB_PRFX . "visits.approved as visits_carnum,
-        " . Registry::DB_PRFX . "visits.approved as visits_regnum
+        " . Registry::DB_PRFX . "visits.carnum as visits_carnum,
+        " . Registry::DB_PRFX . "visits.ssanum as visits_ssanum
         FROM " . Registry::DB_PRFX . "visits
         WHERE " . $cond_siteid . Registry::DB_PRFX . "visits.approved>=\"$approved\" AND " . $cond_outtime  . $cond_intime  . Registry::DB_PRFX . "visits.id LIKE \"$visitid\"" . $cond_rowsperpage . $cond_offset;
         $database = new \App\LobbySIO\Database\Connect();
