@@ -133,11 +133,11 @@
         <?php if ($_POST['reporttype'] == "Default"): ?>
         <div class="container-fluid">
             <table id="report" class="table table-striped table-bordered">
-                <thead><tr><th><?php echo $transLang['IN']; ?></th><th><?php echo $transLang['OUT']; ?></th><th><?php echo $transLang['SITE']; ?></th><th><?php echo $transLang['COMPANY']; ?></th><th><?php echo $transLang['REASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['BADGE']; ?></th><th><?php echo $transLang['INITIALS']; ?></th><?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?><th><?php echo $transLang['CARNUM']; ?></th><th><?php echo $transLang['SSANUM']; ?></th><?php }; ?><?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?><th><?php echo $transLang['CITIZEN']; ?></th><?php }; ?><th><?php echo $transLang['ID_TYPE']; ?></th><th><?php echo $transLang['ID_CHECKED']; ?></th></tr></thead>
+                <thead><tr><th><?php echo $transLang['IN']; ?></th><th><?php echo $transLang['OUT']; ?></th><th><?php echo $transLang['SITE']; ?></th><th><?php echo $transLang['COMPANY']; ?></th><th><?php echo $transLang['REASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['BADGE']; ?></th><th><?php echo $transLang['INITIALS']; ?></th><?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?><th><?php echo $transLang['CARNUM']; ?></th><th><?php echo $transLang['SSANUM']; ?></th><?php } ?><?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?><th><?php echo $transLang['CITIZEN']; ?></th><?php } ?><th><?php echo $transLang['ID_TYPE']; ?></th><th><?php echo $transLang['ID_CHECKED']; ?></th></tr></thead>
                 <tbody>
                     <?php
                         $approval = "2";
-                        if ($_POST['repsite'] == "all") { $selsite="%"; } else { $selsite=$_POST['repsite'];}; 
+                        if ($_POST['repsite'] == "all") { $selsite="%"; } else { $selsite=$_POST['repsite'];}
                         foreach ($VisitInfo->getVisitInfo($selsite, $approval, "%", "%", "%", $_POST['starttime'], $_POST['endtime'], "%", "%") as $row):
                         $timein = new DateTime($row['visits_intime'], new DateTimeZone('UTC'));
                         $timeout = new DateTime($row['visits_outtime'], new DateTimeZone('UTC'));
@@ -145,10 +145,12 @@
                         $timeout->setTimezone(new DateTimeZone("$timezone"));
                         $timein_disp = $timein->format('Y-m-d H:i:s');
                         $timeout_disp = $timeout->format('Y-m-d H:i:s');
+                        if(!empty($row['visits_carnum'])) { $carnum=$row['visits_carnum']; } else { $carnum="";}
+                        if(!empty($row['visits_ssanum'])) { $ssanum=$row['visits_ssanum']; } else { $ssanum="";}
                     ?>
                     <tr>
                         <td><?php echo $timein_disp; ?></td>
-                        <td><?php if (!empty($row['visits_outtime'])) {echo $timeout_disp; } else {echo $transLang['IN'];}; ?></td>
+                        <td><?php if (!empty($row['visits_outtime'])) {echo $timeout_disp; } else {echo $transLang['IN'];} ?></td>
                         <td><?php echo $SiteInfo->getSite($row['visits_site_id'], $uid, "0", "0")[0]["sites_name"]; ?></td>
                         <td><?php echo $row['visits_company']; ?></td>
                         <td><?php echo $transLang[$VisitTypeInfo->getVisitTypeInfo($row['visits_reason'])[0]['visittypes_name']]; ?></td>
@@ -159,10 +161,10 @@
 <?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
                                 <td><?php echo $carnum; ?></td>
                                 <td><?php echo $ssanum; ?></td>
-<?php }; ?>
-<?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?>                        <td><?php if($row['visits_citizen']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>  <?php }; ?>
+<?php } ?>
+<?php if($SiteInfo->getSite($_POST['repsite'], $uid, "0", "0")[0]["sites_region"] == "US") { ?>                        <td><?php if($row['visits_citizen']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; } ?></td>  <?php } ?>
                         <td><?php echo $transLang[$IDTypeInfo->getIDTypeInfo($row['visits_id_type'])[0]['idtypes_name']]; ?></td>
-                        <td><?php if($row['visits_id_checked']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; }; ?></td>
+                        <td><?php if($row['visits_id_checked']==1) { echo $transLang['YESYES']; } else { echo $transLang['NONO']; } ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
