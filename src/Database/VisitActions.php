@@ -35,6 +35,7 @@ class VisitActions {
         ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
 
     public function voidVisit ($visitid, $approved) {
@@ -45,6 +46,7 @@ class VisitActions {
         ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
     
     public function approveVisit ($approvevisit, $id_type, $id_checked, $citizen, $badge, $initials, $approved) {
@@ -61,18 +63,20 @@ class VisitActions {
         ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
 
-    public function newVisit ($firstname, $lastname, $company, $reason, $intime, $signature, $siteid, $approved, $escort_signature, $escort) {
+    public function newVisit ($firstname, $lastname, $company, $reason, $intime, $signature, $siteid, $approved, $escort_signature, $escort, $carnum, $ssanum) {
         $query = "
             INSERT INTO " . Registry::DB_PRFX . "visits (" . Registry::DB_PRFX . "visits.firstname, " . Registry::DB_PRFX . "visits.lastname,
             " . Registry::DB_PRFX . "visits.company, " . Registry::DB_PRFX . "visits.reason, " . Registry::DB_PRFX . "visits.intime,
             " . Registry::DB_PRFX . "visits.signature, " . Registry::DB_PRFX . "visits.site_id, " . Registry::DB_PRFX . "visits.approved,
-            " . Registry::DB_PRFX . "visits.escort_signature, " . Registry::DB_PRFX . "visits.escort)
+            " . Registry::DB_PRFX . "visits.escort_signature, " . Registry::DB_PRFX . "visits.escort, " . Registry::DB_PRFX . "visits.carnum, " . Registry::DB_PRFX . "visits.ssanum)
             VALUES (\"$firstname\", \"$lastname\", \"$company\", \"$reason\", \"$intime\", \"$signature\", \"$siteid\",
-            \"$approved\", \"$escort_signature\", \"$escort\")
+            \"$approved\", \"$escort_signature\", \"$escort\", \"$carnum\", \"$ssanum\")
         ";
         $database = new \App\LobbySIO\Database\Connect();
         $count = $database->runQuery($query);
+        return $count;
     }
 }

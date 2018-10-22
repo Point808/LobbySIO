@@ -52,7 +52,9 @@
 <!-- CONTENT START -->
 
         <?php if (!empty($_POST)) {                              // PROCESS POST
-            echo $VisitActions->newVisit($_POST['firstname'], $_POST['lastname'], $_POST['company'], $_POST['visit_type'], $StaticFunctions->getUTC(), $_POST['v_signature'], $_POST['siteid'], "1", $_POST['e_signature'], $_POST['escort']);
+            if (empty($_POST['carnum'])) { $carnum="";} else {$carnum=$_POST['carnum'];};
+            if (empty($_POST['ssanum'])) { $ssanum="";} else {$ssanum=$_POST['ssanum'];};
+            echo $VisitActions->newVisit($_POST['firstname'], $_POST['lastname'], $_POST['company'], $_POST['visit_type'], $StaticFunctions->getUTC(), $_POST['v_signature'], $_POST['siteid'], "1", $_POST['e_signature'], $_POST['escort'], $carnum, $ssanum);
         ?>
         <div class="container">
             <div class="row">

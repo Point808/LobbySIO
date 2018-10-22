@@ -51,6 +51,16 @@
 
 <?php if (isset($session_user)) { if($session_user["0"]["users_usertype"] !== "ADMIN") { header("Location: index.php"); ?><h2 class="content-subhead"><?php echo $transLang['NOT_AUTHORIZED']; ?></h2><?php }; }; ?>
 
+
+<?php    if (!empty($_POST['edituser'])):                                            // NEW SITE
+        //$SiteInfo->addSite($_POST['sitename'], $_POST['timezone'], $_POST['region']);
+        //header('Location: ' . $_SERVER['PHP_SELF']);
+
+        endif;
+?>
+
+
+
 <?php                                                            // POST ACTIONS
 
     if (!empty($_POST['newsite'])):                              // NEW SITE
@@ -126,7 +136,7 @@ if (0 === $row_count): else: $page_count = (int)ceil($row_count / $StaticFunctio
                 <tbody>
                     <?php foreach($Users->getUserInfo("%", $StaticFunctions->getPageRows(), $offset) as $row): ?>
                     <tr>
-                        <td><?php echo $row['users_lastname'] . ", " . $row['users_firstname']; ?></td><td><?php echo $row['users_username']; ?></td><td><?php echo $row['users_email']; ?></td><td><?php echo $row['users_created']; ?></td><td><?php echo $transLang[$row['users_usertype']]; ?></td><td><form method="post" onsubmit="return confirm('<?php echo $transLang['DELETE_WARNING']; ?>')"><input type="hidden" id="_METHOD" name="_METHOD" value="DELETE" /><input type="hidden" id="deleteid" name="deleteid" value="<?php echo $row['users_id']; ?>" /><button class="btn btn-danger btn-sm" id="deluser" name="deluser" value="deluser" type="submit" <?php if ($row['users_username'] == "admin"): echo "disabled"; endif; if ($row['users_username'] == "KIOSK"): echo "disabled"; endif; ?>><i class="fa fa-trash"></i> </button></form></td>
+                        <td><?php echo $row['users_lastname'] . ", " . $row['users_firstname']; ?></td><td><?php echo $row['users_username']; ?></td><td><?php echo $row['users_email']; ?></td><td><?php echo $row['users_created']; ?></td><td><?php echo $transLang[$row['users_usertype']]; ?></td><td><form method="post" onsubmit="return confirm('<?php echo $transLang['DELETE_WARNING']; ?>')"><input type="hidden" id="_METHOD" name="_METHOD" value="DELETE" /><input type="hidden" id="deleteid" name="deleteid" value="<?php echo $row['users_id']; ?>" /><button class="btn btn-primary btn-sm" id="edituser" name="edituser" value="edituser" type="submit" <?php if ($row['users_username'] == "admin"): echo "disabled"; endif; if ($row['users_username'] == "KIOSK"): echo "disabled"; endif; ?>><i class="fa fa-edit"></i> </button><button class="btn btn-danger btn-sm" id="deluser" name="deluser" value="deluser" type="submit" <?php if ($row['users_username'] == "admin"): echo "disabled"; endif; if ($row['users_username'] == "KIOSK"): echo "disabled"; endif; ?>><i class="fa fa-trash"></i> </button></form></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -154,7 +154,7 @@
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th><?php echo $transLang['TIMEREASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['VALIDATIONS']; ?></th><th><?php echo $transLang['BADGEINITIALS']; ?></th><th><?php echo $transLang['ACTIONS']; ?></th><th>&nbsp</th>
+                            <th><?php echo $transLang['TIMEREASON']; ?></th><th><?php echo $transLang['NAME']; ?></th><th><?php echo $transLang['ESCORT']; ?></th><th><?php echo $transLang['VALIDATIONS']; ?></th><th><?php echo $transLang['BADGEINITIALS']; ?></th><?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?><th><?php echo $transLang['CARNUM'] . "/" . $transLang['SSANUM']; ?></th><?php }; ?><th><?php echo $transLang['ACTIONS']; ?></th><th>&nbsp</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,6 +191,9 @@
                                                                     <?php }; ?>
 </td>
                                 <td><input type="text" id="badge" name="badge" class="form-control" autofocus disabled value="<?php echo $row['visits_badge']; ?>"> <input type="text" id="initials" name="initials" class="form-control" autofocus disabled value="<?php echo $row['visits_initials']; ?>"></td>
+<?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
+                                <td><?php echo $row['visits_carnum']; ?> / <?php echo $row['visits_ssanum']; ?></td>
+<?php }; ?>
                                 <td> </td>
                                 <td><button type="submit" name="endvisit" value="<?php echo $row['visits_id']; ?>" class="btn btn-warning btn-block"><i class="fas fa-sign-out-alt"></i>&nbsp<?php echo $transLang['SIGNOUT']; ?></button><br>
                                     <div>
@@ -224,6 +227,9 @@
                                     <input type="text" id="initials" name="initials" class="form-control<?php if( isset($initials_error) && $initials_error == "1" && $_POST['approvevisit'] == $visitid ) { echo " is-invalid"; } ?>" placeholder="<?php echo $transLang['INITIALS']; ?>" autofocus maxlength="5">
                                         <div class="invalid-feedback"><?php echo $transLang['REQUIRED']; ?></div>
                                 </td>
+<?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
+                                <td><?php echo $row['visits_carnum']; ?> / <?php echo $row['visits_ssanum']; ?></td>
+<?php }; ?>
                                 <td>
                                     <button type="submit" name="approvevisit" value="<?php echo $visitid; ?>" class="btn btn-success btn-block"><i class="fas fa-thumbs-up"></i>&nbsp;<?php echo $transLang['APPROVE']; ?></button><br /><button type="submit" name="voidvisit" value="<?php echo $visitid; ?>" class="btn btn-danger btn-block" onsubmit="return confirm('<?php echo $transLang['VOID_WARNING']; ?>')"><i class="fas fa-thumbs-down"></i>&nbsp;<?php echo $transLang['VOID']; ?></button>
                                 </td>

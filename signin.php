@@ -68,6 +68,26 @@
                         </div>
                     </div>
                 </div>
+    <?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['CARNUM']; ?></span>
+                            </div>
+                            <input type="text" id="company" name="carnum" class="form-control" placeholder="<?php echo $transLang['CARNUM']; ?>" required autofocus>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['SSANUM']; ?></span>
+                            </div>
+                            <input type="text" id="company" name="ssanum" class="form-control" placeholder="<?php echo $transLang['SSANUM']; ?>" required autofocus>
+                        </div>
+                    </div>
+                </div>
+    <?php }; ?>
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
