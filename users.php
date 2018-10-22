@@ -53,9 +53,66 @@
 
 
 <?php    if (!empty($_POST['edituser'])):                                            // NEW SITE
-        //$SiteInfo->addSite($_POST['sitename'], $_POST['timezone'], $_POST['region']);
+    $edituser = $Users->getUserInfo($_POST['deleteid'], "0", "0")
+    //$SiteInfo->addSite($_POST['sitename'], $_POST['timezone'], $_POST['region']);
         //header('Location: ' . $_SERVER['PHP_SELF']);
+?>
 
+        <!-- USER EDIT START -->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h2><?php echo $app_current_pageicon . $transLang['EDIT_PROFILE']; ?></h2>
+                </div>
+            </div>
+                        <form class="form-inline my-2 my-lg-0" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                                <fieldset id="editor">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <input type="text" class="form-control" id="firstname" name="firstname" value="<?php echo $edituser["0"]["users_firstname"]; ?>" required />
+                                            </div>
+                                            <div class="col-sm">
+                                                <input type="text" class="form-control" id="lastname" name="lastname" value="<?php echo $edituser["0"]["users_lastname"]; ?>" required />
+                                            </div>
+                                            <div class="col-sm">
+                                                <input type="text" class="form-control" id="username" name="username" value="<?php echo $edituser["0"]["users_username"]; ?>" required />
+                                            </div>
+                                            <div class="col-sm">
+                                                <input type="text" class="form-control" id="email" name="email" value="<?php echo $edituser["0"]["users_email"]; ?>" />
+                                            </div>
+                                            <div class="col-sm">
+                                                <select class="custom-select" id="usertype" aria-label="<?php echo $transLang['ACCESS_LEVEL']; ?>" name="usertype" required>
+                                                    <?php foreach($Users->getUserTypeInfo("%") as $row): ?>
+                                                    <option value="<?php echo $row['usertypes_id']; ?>"<?php if ($row['usertypes_id']==$edituser["0"]["users_usertypeid"]) { echo " selected"; } ?>><?php echo $transLang[$row['usertypes_name']]; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <select id="sitepermissions" name="sitepermissions" class="custom-select" multiple size="5">
+                                                    <?php foreach($SiteInfo->getSite("0", "0", "0", "0") as $row): ?>
+                                                    <option value="<?php echo $row['sites_id']; ?>"<?php if ($row['users_sites_users_id']==$edituser["0"]["users_id"]) { echo " selected"; } ?>><?php echo $row['sites_name']; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <button type="submit" class="form-control btn btn-block btn-primary" value="Submit" name="editusercomplete"><i class="fa fa-user-plus"></i> <?php echo $transLang['SAVE']; ?></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+        </div>
+        <?php
+        $minpasslength = $StaticFunctions->getMinPass();
+        ?>
+
+        <!-- USER EDIT END -->
+<?php
         endif;
 ?>
 

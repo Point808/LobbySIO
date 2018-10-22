@@ -54,7 +54,8 @@ class SiteInfo {
             " . Registry::DB_PRFX . "sites.id as sites_id,
             " . Registry::DB_PRFX . "sites.name as sites_name,
             " . Registry::DB_PRFX . "sites.region as sites_region,
-            " . Registry::DB_PRFX . "sites.timezone as sites_timezone
+            " . Registry::DB_PRFX . "sites.timezone as sites_timezone,
+            " . Registry::DB_PRFX . "users_sites.users_id as users_sites_users_id
             FROM " . Registry::DB_PRFX . "sites
             JOIN " . Registry::DB_PRFX . "users_sites ON " . Registry::DB_PRFX . "sites.id=" . Registry::DB_PRFX . "users_sites.sites_id
             " . $c_where . "
