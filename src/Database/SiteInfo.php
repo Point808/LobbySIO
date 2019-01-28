@@ -50,7 +50,7 @@ class SiteInfo {
         if ($offset == "0") { $c_offset = NULL; }
             else { $c_offset = " OFFSET " . $offset; }
         $query = "
-            SELECT
+            SELECT DISTINCT
             " . Registry::DB_PRFX . "sites.id as sites_id,
             " . Registry::DB_PRFX . "sites.name as sites_name,
             " . Registry::DB_PRFX . "sites.region as sites_region,

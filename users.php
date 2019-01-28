@@ -91,6 +91,13 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm">
+                                                <?php print_r($SiteInfo->getSite("0", "0", "0", "0"));
+            //                                        foreach($SiteInfo->getSite("0", $uid, "0", "0") as $arr) {
+       // $lookup_array[$arr['sites_id']]=1; }
+      //  if(isset($lookup_array[$siteidcookie])) {
+      //      $siteid = $siteidcookie; } else { $siteid = "1"; }
+      //  if(!isset($siteid)) { $siteid="1"; }
+        ?>
                                                 <select id="sitepermissions" name="sitepermissions" class="custom-select" multiple size="5">
                                                     <?php foreach($SiteInfo->getSite("0", "0", "0", "0") as $row): ?>
                                                     <option value="<?php echo $row['sites_id']; ?>"<?php if ($row['users_sites_users_id']==$edituser["0"]["users_id"]) { echo " selected"; } ?>><?php echo $row['sites_name']; ?></option>

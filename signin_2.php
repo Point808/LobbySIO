@@ -50,62 +50,51 @@
     } else { ?>
 <!-- CONTENT START -->
 
+        <?php if (!empty($_POST)) {                              // PROCESS POST
+            if (empty($_POST['carnum'])) { $carnum="";} else {$carnum=$_POST['carnum'];};
+            if (empty($_POST['ssanum'])) { $ssanum="";} else {$ssanum=$_POST['ssanum'];};
+            if (empty($_POST['firstname'])) { $firstname="";} else {$firstname=$_POST['firstname'];};
+            if (empty($_POST['lastname'])) { $lastname="";} else {$lastname=$_POST['lastname'];};
+            if (empty($_POST['company'])) { $company="";} else {$company=$_POST['company'];};
+        ?>
         <div class="container">
             <div class="row">
                 <div class="col-sm">
                     <h2><i class="fas fa-sign-in-alt"></i> <?php echo $transLang['SIGNIN']; ?></h2>
                 </div>
             </div>
-            <form name="form-signin" class="form-signin" action="signin_2.php" method="post">
+            <form name="form-signin" class="form-signin" action="signin_3.php" method="post">
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['NAME']; ?>:</span>
+                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['REASON']; ?></span>
                             </div>
-                            <input type="text" id="firstname" name="firstname" class="form-control" placeholder="<?php echo $transLang['FIRST']; ?>" required autofocus>
-                            <input type="text" id="lastname" name="lastname" class="form-control" placeholder="<?php echo $transLang['LAST']; ?>" required autofocus>
-                        </div>
-                    </div>
-                </div>
-    <?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "EMEA") { ?>
-                <div class="row">
-                    <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['CARNUM']; ?></span>
-                            </div>
-                            <input type="text" id="company" name="carnum" class="form-control" placeholder="<?php echo $transLang['CARNUM']; ?>" required autofocus>
-                        </div>
-                    </div>
-                    <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['SSANUM']; ?></span>
-                            </div>
-                            <input type="text" id="company" name="ssanum" class="form-control" placeholder="<?php echo $transLang['SSANUM']; ?>" required autofocus>
-                        </div>
-                    </div>
-                </div>
-    <?php }; ?>
-                <div class="row">
-                    <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon3"><?php echo $transLang['COMPANY']; ?></span>
-                            </div>
-                            <input type="text" id="company" name="company" class="form-control" placeholder="<?php echo $transLang['COMPANY']; ?>" required autofocus>
+                            <select class="custom-select" id="visit_type" aria-label="Visit Type" name="visit_type" required>
+                                <option value="" selected><?php echo $transLang['SELECTREASON']; ?></option><?php foreach($VisitTypeInfo->getVisitTypeInfo("%") as $row): ?>
+                                <option value="<?php echo $row['visittypes_id']; ?>"><?php echo $transLang[$row['visittypes_name']]; ?></option><?php endforeach; ?>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <input type="hidden" name="siteid" id="siteid" value="<?php echo $siteid; ?>" />
+                        <input type="hidden" name="carnum" id="carnum" value="<?php echo $carnum; ?>" />
+                        <input type="hidden" name="ssanum" id="ssanum" value="<?php echo $ssanum; ?>" />
+                        <input type="hidden" name="firstname" id="firstname" value="<?php echo $firstname; ?>" />
+                        <input type="hidden" name="lastname" id="lastname" value="<?php echo $lastname; ?>" />
+                        <input type="hidden" name="company" id="company" value="<?php echo $company; ?>" />
                         <button type="submit" id="saveBtn" class="btn btn-lg btn-success btn-block" name="signin"><?php echo $transLang['NEXT']; ?></button>
                     </div>
                 </div>
             </form>
         </div>
+        <?php } else {                                         // EXIT IF NO POST
+        ?>
+        <div class="container">
+            <h2><?php echo $transLang['NOSIGNIN']; ?></h2>
+        </div>
+        <?php }; ?>
 
 <!-- CONTENT END -->
 <?php }; require_once("inc/footer.inc.php");
