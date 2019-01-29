@@ -84,7 +84,7 @@
                         <input type="hidden" name="v_signature" id="v_signature" value="<?php echo $v_signature; ?>" />
                         <input type="hidden" name="e_signature" id="e_signature" value="<?php echo $e_signature; ?>" />
                         <input type="hidden" name="escort" id="escort" value="<?php echo $escort; ?>" />
-                        <button type="cancel" id="cancel" class="btn btn-lg btn-danger btn-block" name="cancel"><?php echo $transLang['CANCEL']; ?></button>
+                        <a class="btn btn-lg btn-danger btn-block" href="index.php"><?php echo $transLang['CANCEL']; ?></a>
                         <button type="submit" id="saveBtn" class="btn btn-lg btn-success btn-block" name="signin"><?php echo $transLang['SIGNIN']; ?></button>
                     </div>
                 </div>

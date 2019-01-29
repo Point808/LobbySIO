@@ -101,7 +101,7 @@
                         <input type="hidden" name="lastname" id="lastname" value="<?php echo $lastname; ?>" />
                         <input type="hidden" name="company" id="company" value="<?php echo $company; ?>" />
                         <input type="hidden" name="visit_type" id="visit_type" value="<?php echo $visit_type; ?>" />
-                        <button type="submit" id="saveBtn" class="btn btn-lg btn-success btn-block" name="signin"><?php echo $transLang['SIGNIN']; ?></button>
+                        <button type="submit" id="saveBtn" class="btn btn-lg btn-success btn-block" name="signin"><?php echo $transLang['NEXT']; ?></button>
                     </div>
                 </div>
             </form>

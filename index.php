@@ -217,7 +217,7 @@
                                     <option value="<?php echo $row['idtypes_id']; ?>"><?php echo $transLang[$row['idtypes_name']]; ?></option><?php endforeach; ?>
                                 </select>
                                 <div class="invalid-feedback"><?php echo $transLang['REQUIRED']; ?></div>
-                                <input class="form-check-input" type="checkbox" value="1" id="id_checked" name="id_checked" required>
+                                <input class="form-check-input" type="checkbox" value="1" id="id_checked" name="id_checked">
                                 <label class="form-check-label" for="id_checked"><?php echo $transLang['ID_CHECKED']; ?></label><br>
 <?php if($SiteInfo->getSite($siteid, $uid, "0", "0")[0]["sites_region"] == "US") { ?>
                                 <input class="form-check-input" type="checkbox" value="1" id="citizen" name="citizen">
