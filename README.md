@@ -2,6 +2,7 @@
 
 ### Concept ###
 Touchscreen or tablet installed in a lobby or waiting room allows guest to self-register.  A security desk operator has a secured interface to log in and manage the registration queue.  
+08/21/2019 - moved to new GIT server.  Apologies for disruptions.  
 
 ### About ###
 Josh North - josh.north@point808.com  
