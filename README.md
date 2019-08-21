@@ -2,7 +2,6 @@
 
 ### Concept ###
 Touchscreen or tablet installed in a lobby or waiting room allows guest to self-register.  A security desk operator has a secured interface to log in and manage the registration queue.  
-08/21/2019 - moved to new GIT server.  Apologies for disruptions.  
 
 ### About ###
 Josh North - josh.north@point808.com  
@@ -12,6 +11,7 @@ GPLv3. Credit is appreciated.
 
 ### Support ###
 Email me or use the tools at https://git.point808.com/Point808/LobbySIO  
+*** This repository lives at https://git.point808.com and pushes to github on update.
 
 ### Credits ###
 * Bootstrap - http://getbootstrap.com  
